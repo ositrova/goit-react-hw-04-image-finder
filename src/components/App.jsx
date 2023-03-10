@@ -58,8 +58,9 @@ useEffect(() => {
       setStatus('idle');
       setLoadMore(12 - e.hits.length);
      })
+
       .catch(error => console.log(error));
-}, [page,query]);
+}, [page,query, setLoadMore, setPictures, setStatus]);
 
 
   return (
