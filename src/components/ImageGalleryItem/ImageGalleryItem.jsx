@@ -5,7 +5,7 @@ export const ImageGalleryItem = ({pictures, onClickImg}) => {
     return pictures.map((picture, index) => {
         return (
             <ImageGalleryCard key={index}>
-      <GalleryCardImg src={picture.webformatURL} alt={picture.tags}
+      <GalleryCardImg src={picture.webformatURL} alt=''
       onClick ={() => {
         onClickImg(picture.largeImageURL)
     }}

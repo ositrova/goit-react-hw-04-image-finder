@@ -1,5 +1,5 @@
 
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { fetchPictures } from "services/gallaryAPI";
 import { GlobalStyle } from "./GlobalStyle";
 
@@ -11,76 +11,67 @@ import { Searchbar } from "./Searchbar/Searchbar";
 import { Loader } from './Loader/Loader';
 import { Button } from './Button/Button';
 
-export class App extends Component {
-  state = {
-    pictures: [],
-    status: 'idle',
-    showModal: false,
-    page: 1,
-    query: '',
-    tags: '',
-    largeImageUrl: '',
-    loadMore: null,
+
+export const App = () => {
+  const{pictures, setPictures} = useState([]);
+  const{status, setStatus} = useState('idle');
+  const{showModal, setShowModal} = useState(false);
+  const{page, setPage} = useState(1);
+  const{query, setQuery} = useState('');
+  const{largeImageUrl, setLargeImageUrl} = useState('');
+  const{loadMore, setLoadMore} = useState(null);
+
+
+   const searchResult = value => {
+    setQuery(value);
+    setPage(1);
+    setPictures([])
+    setLoadMore(null)
   };
 
-  searchResult = value => {
-    this.setState({ query: value, page: 1, pictures: [], loadMore: null});
+const toggleModal = () => {
+    setShowModal(false);
   };
 
-toggleModal = () => {
-  this.setState(({showModal}) => ({
-    showModal: !showModal,
-  }))
+
+const getLargeImg = imgUrl => {
+  setLargeImageUrl(imgUrl);
+  toggleModal();
 };
 
-getLargeImg = imgUrl => {
-  this.setState({largeImageUrl: imgUrl})
-  this.toggleModal()
+const handleLoadMore = () => {
+    setPage (prevPage => prevPage + 1);
+
 };
 
-handleLoadMore =() => {
-  this.setState(prevState => ({
-    page: prevState.page + 1,
-  }))
-}
+useEffect(() => {
+  if (!query) {
+    return;
+  };
 
+    setStatus('loading');
+    setLoadMore(null);
 
-componentDidUpdate(_, prevState) {
-  const {page, query} = this.state;
-
-  if (prevState.page !== page || prevState.query !== query) {
-    this.setState({ status: 'loading'});
-
-    fetchPictures (query, page)
-    .then (e =>
-      this.setState(prevState => ({
-        pictures: [...prevState.pictures, ...e.hits],
-        status: 'idle',
-        loadMore: 12 - e.hits.length,
-      })))
+    fetchPictures(query, page)
+    .then(e => {
+      setPictures(prevState => [...prevState, ...e.hits]);
+      setStatus('idle');
+      setLoadMore(12 - e.hits.length);
+     })
       .catch(error => console.log(error));
-  }
-};
+}, [page,query]);
 
-render(){
-  const {pictures,
-    status,
-    showModal,
-    tags,
-    largeImageUrl,
-    loadMore
-  } = this.state
+
   return (
     <Layout>
 <GlobalStyle/>
-<Searchbar onSubmit={this.searchResult}/>
+<Searchbar onSubmit={searchResult}/>
 {showModal && (
-  <Modal url={largeImageUrl} alt={tags} onClose={this.toggleModal} />
+  <Modal url={largeImageUrl} onClose={toggleModal} />
 )}
-    <ImageGallery pictures={pictures} onClick={this.getLargeImg}/>  
+    <ImageGallery pictures={pictures} onClick={getLargeImg}/>  
     {status === 'loading' && <Loader />}
-        {loadMore === 0 && <Button onClick={this.handleLoadMore} />}
+        {loadMore === 0 && <Button onClick={handleLoadMore} />}
     </Layout>
   );
 };
-}

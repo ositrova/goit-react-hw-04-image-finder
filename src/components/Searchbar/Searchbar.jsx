@@ -1,4 +1,4 @@
-import { Component } from 'react';
+
 import PropTypes from 'prop-types';
 import {
   SearchbarContainer,
@@ -8,36 +8,29 @@ import {
   SearchFormInput,
 } from './Searchbar.styled';
 import { BsSearch } from 'react-icons/bs';
+import { useState } from 'react';
 
-export class Searchbar extends Component {
+export const Searchbar =({onSubmit}) => {
 
-  state = {
-    search: '',
-  };
+ const {search, setSearch} = useState('')
 
-searchResult = e =>{
-  this.setState({
+
+ const searchResult = e =>{
+  setSearch({
     search: e.currentTarget.value,
   })
 };
 
-handleSubmit = e => {
+const handleSubmit = e => {
   e.preventDefault();
-  const {search} = this.state;
-  const {onSubmit} = this.props;
 
   onSubmit(search);
-  this.setState({
-    search: '',
-  })
+  setSearch('')
 };
-
-  render() {
-const {search} = this.state;
 return (
 
   <SearchbarContainer>
-  <SearchForm onSubmit={this.handleSubmit}>
+  <SearchForm onSubmit={handleSubmit}>
     <SearchFormBtn type="submit"> <BsSearch/>
       <SearchFormBtnLabel>Search</SearchFormBtnLabel>
     </SearchFormBtn>
@@ -48,13 +41,13 @@ return (
       autoFocus
       placeholder="Search images and photos"
       value={search}
-      onChange={this.searchResult}
+      onChange={searchResult}
     />
   </SearchForm>
 </SearchbarContainer>
 );
-}
 };
+
 
 
 
