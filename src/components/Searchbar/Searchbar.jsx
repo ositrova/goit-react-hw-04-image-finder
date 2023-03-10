@@ -12,13 +12,11 @@ import { useState } from 'react';
 
 export const Searchbar =({onSubmit}) => {
 
- const {search, setSearch} = useState('')
+ const [search, setSearch] = useState('')
 
 
  const searchResult = e =>{
-  setSearch({
-    search: e.currentTarget.value,
-  })
+  setSearch(e.currentTarget.value)
 };
 
 const handleSubmit = e => {
@@ -27,6 +25,8 @@ const handleSubmit = e => {
   onSubmit(search);
   setSearch('')
 };
+
+
 return (
 
   <SearchbarContainer>

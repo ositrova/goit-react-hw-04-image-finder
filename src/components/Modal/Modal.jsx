@@ -30,7 +30,7 @@ export const Modal = ({onClose, url}) => {
         return createPortal (
 <Overlay onClick={handleBackdropClick}>
                 <ModalContainer>
-                    <img src={url} alt=''/>
+                    <img src={url} alt=""/>
                 </ModalContainer>
             </Overlay>,
             modalRoot

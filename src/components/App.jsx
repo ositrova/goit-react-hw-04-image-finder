@@ -13,13 +13,13 @@ import { Button } from './Button/Button';
 
 
 export const App = () => {
-  const{pictures, setPictures} = useState([]);
-  const{status, setStatus} = useState('idle');
-  const{showModal, setShowModal} = useState(false);
-  const{page, setPage} = useState(1);
-  const{query, setQuery} = useState('');
-  const{largeImageUrl, setLargeImageUrl} = useState('');
-  const{loadMore, setLoadMore} = useState(null);
+  const[pictures, setPictures] = useState([]);
+  const[status, setStatus] = useState('idle');
+  const[showModal, setShowModal] = useState(false);
+  const[page, setPage] = useState(1);
+  const[query, setQuery] = useState('');
+  const[largeImageUrl, setLargeImageUrl] = useState('');
+  const[loadMore, setLoadMore] = useState(null);
 
 
    const searchResult = value => {
@@ -30,7 +30,7 @@ export const App = () => {
   };
 
 const toggleModal = () => {
-    setShowModal(false);
+    setShowModal(prevState => !prevState);
   };
 
 
@@ -41,16 +41,16 @@ const getLargeImg = imgUrl => {
 
 const handleLoadMore = () => {
     setPage (prevPage => prevPage + 1);
+   
 
 };
 
 useEffect(() => {
   if (!query) {
     return;
-  };
+  }
 
-    setStatus('loading');
-    setLoadMore(null);
+  setStatus('loading');
 
     fetchPictures(query, page)
     .then(e => {
@@ -58,9 +58,9 @@ useEffect(() => {
       setStatus('idle');
       setLoadMore(12 - e.hits.length);
      })
-
       .catch(error => console.log(error));
-}, [page,query, setLoadMore, setPictures, setStatus]);
+  
+}, [page,query]);
 
 
   return (
