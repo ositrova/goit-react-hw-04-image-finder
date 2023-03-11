@@ -9,16 +9,16 @@ const modalRoot = document.querySelector('#modal-root');
 export const Modal = ({onClose, url}) => {
 
     useEffect(() => {
+        const handelKeyDown = e => {
+            if (e.code === 'Escape'){
+                onClose();
+            }
+        };
         window.addEventListener('keydown', handelKeyDown);
         return () => {window.removeEventListener('keydown', handelKeyDown);}
-    });
+    }, [onClose]);
    
 
-    const handelKeyDown = e => {
-        if (e.code === 'Escape'){
-            onClose();
-        }
-    };
 
     const handleBackdropClick = e => {
         if (e.currentTarget === e.target) {
